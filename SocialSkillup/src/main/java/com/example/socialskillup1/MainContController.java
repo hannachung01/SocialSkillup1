@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.EventObject;
 
 public class MainContController {
     @FXML
@@ -45,6 +46,7 @@ public class MainContController {
     //ca sa aiba acces la contCurent de la login
     private Cont contCurent;
     private ArrayList<Grup> toateGrupurile;
+    private Settings settingsController;
     public void setContCurent(Cont contCurent)
     {
         this.contCurent = contCurent;
@@ -67,7 +69,7 @@ public class MainContController {
     public void updateInfo() throws SQLException { //aici se incarca informatia personala despre contCurent
         String username = contCurent.getUsername();
         setUsername(username);
-        Image pozaprofil = new Image(contCurent.pozaPath);
+        Image pozaprofil = new Image("profil1.png");
         getPozaprofil().setImage(pozaprofil);
         getLevelLabel().setText(String.valueOf(contCurent.getNivel()));
         contCurent.populeazaGrupuri(); //populeaza lista de grupuri la care apartin utilizatorul actual in cont
@@ -115,19 +117,7 @@ public class MainContController {
     }
 
     @FXML
-    public void laMesajView(ActionEvent e) throws IOException, SQLException {
-        FXMLLoader mesajView = new FXMLLoader(Main.class.getResource("mesajview.fxml"));
-        Scene scene = new Scene(mesajView.load());
-        MesajController mc = mesajView.getController();
-        mc.setContCurent(contCurent);
-        mc.updateInfo();
-        Stage stage = (Stage)((Node)e.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    @FXML
-    private void addGroupToList() { //sa folosim asta intr-un Groupview separat?
+    private void addGroupToList() {
         //va trebui sa salvam grupurile
         ObservableList<String> items = groupList.getItems();
         String newGroup = newGroupField.getText().trim();
@@ -143,14 +133,42 @@ public class MainContController {
         if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
             String selectedItem = groupList.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("group.fxml"));
+                /*FXMLLoader loader = new FXMLLoader(getClass().getResource("group.fxml"));
                 Parent root = loader.load();
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
                 stage.setWidth(300);
                 stage.setHeight(500);
-                stage.show();
+                stage.show();*/
+                Parent settingsParent = FXMLLoader.load(getClass().getResource("group.fxml"));
+                Scene settingsScene = new Scene(settingsParent);
+
+                Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+                window.setScene(settingsScene);
+                window.show();
             }
         }
+    }
+
+    @FXML
+    private void handleLogout(ActionEvent event) throws IOException {
+        Parent loginParent = FXMLLoader.load(getClass().getResource("login.fxml"));
+        Scene loginScene = new Scene(loginParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(loginScene);
+        window.show();
+    }
+    @FXML
+    private void switchToSettings(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
+        Parent settingsParent = loader.load();
+        Settings settingsController = loader.getController();
+        settingsController.setAccountInfo(contCurent);
+        settingsController.setProfileImage(pozaprofil);
+        Scene settingsScene = new Scene(settingsParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        window.setScene(settingsScene);
+        window.show();
     }
 }
