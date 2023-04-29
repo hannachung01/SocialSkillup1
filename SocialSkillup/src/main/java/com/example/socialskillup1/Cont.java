@@ -8,6 +8,8 @@ public class Cont {
     private String name;
     private String username;
     private int nivel;
+    private String password;
+    private String email;
     String pozaPath;
 
     //implementeaza stickere mai incolo
@@ -25,12 +27,19 @@ public class Cont {
         if (rs.next())
         {
             Cont c = new Cont(rs);
+            rs.close();
+            pst.close();
+            conn.close();
             return c;
         }
-        pst.close();
-        conn.close();
-        rs.close();
-        return null;
+        else
+        {
+            rs.close();
+            pst.close();
+            conn.close();
+            return null;
+        }
+
     }
     public Cont(int IDUtilizator, String name, String username, int nivel, String pozaPath) {
         this.IDUtilizator = IDUtilizator;
@@ -46,6 +55,8 @@ public class Cont {
         this.name = rs.getString("Nume");
         this.nivel = rs.getInt("Nivel");
         this.pozaPath = rs.getString("Poza");
+        this.password = rs.getString("Parola");
+        this.email = rs.getString("Email");
     }
 
     public Cont() {
@@ -53,6 +64,13 @@ public class Cont {
 
     public int getIDUtilizator() {
         return IDUtilizator;
+    }
+    public String getPassword() {
+        return this.password;
+    }
+
+    public String getEmail() {
+        return this.email;
     }
 
     public String getName() {
@@ -73,6 +91,14 @@ public class Cont {
 
     public ArrayList<Cont> getPrieteni() {
         return prieteni;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setIDUtilizator(int IDUtilizator) {
@@ -97,11 +123,6 @@ public class Cont {
 
     public void adaugaPrieteni(int prietenContID) {
     }
-    @Override
-    public String toString()
-    {
-        return this.getUsername();
-    }
     public void populeazaGrupuri() throws SQLException {
         grupuri = new ArrayList<>();
         String query = "SELECT * FROM MembriiGrupelor WHERE IDUtilizator = ?";
@@ -113,9 +134,9 @@ public class Cont {
             MembruGrup mem = MembruGrup.extrageMembruGrup(rs, false); //false pentru ca folosit ca parte de lista de grupuri
             grupuri.add(mem);
         }
+        rs.close();
         pst.close();
         conn.close();
-        rs.close();
     }
     public void populeazaPrieteni() throws SQLException
     {
@@ -131,9 +152,6 @@ public class Cont {
             Cont p = lookupCont(idCautat);
             if (p != null) prieteni.add(p);
         }
-        pst.close();
-        conn.close();
-        rs.close();
     }
 
     public void populeazaConversatii() throws SQLException{
@@ -155,6 +173,7 @@ public class Cont {
             while (rs2.next())
             {
                 int IDPart = rs2.getInt("IDParticipant");
+                System.out.println("Am gasit participant "+ IDPart);
                 Cont c = lookupCont(IDPart);
                 participanti.add(c);
             }
@@ -168,18 +187,11 @@ public class Cont {
                 int senderID = rs3.getInt("SenderID");
                 String continut = rs3.getString("Continut");
                 LocalDateTime ts = LocalDateTime.parse(rs3.getString("Timestamp"));
-                Mesaj m = new Mesaj(senderID, continut, ts);
+                Mesaj m = new Mesaj(1, continut, ts);
                 mesaje.add(m);
             }
             cp = new ConversatiePrivata(idconv, participanti, mesaje);
             conversatii.add(cp);
-            pst3.close();
-            rs3.close();
-            pst2.close();
-            rs2.close();
         }
-        rs.close();
-        pst.close();
-        conn.close();
     }
 }

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.collections.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="500" prefWidth="320" spacing="10" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialskillup1.MainContController">
+<VBox alignment="CENTER" prefHeight="500" prefWidth="320" spacing="10" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialskillup1.MainContController">
 
     <ImageView fx:id="pozaprofil">
         <image>
@@ -68,18 +78,10 @@
         </HBox>
     </VBox>
 
-                <HBox alignment="CENTER">
+    <HBox alignment="CENTER">
         <Button text="How To" />
-        <Button onAction="#laMesajView" text="Messages" />
-        <MenuButton text="Settings">
-            <items>
-                <MenuItem text="Change Password" />
-                <MenuItem text="Change Username" />
-                <MenuItem text="Change Email" />
-                <MenuItem text="Change Profile Picture" />
-                <MenuItem text="Friend List" />
-            </items>
-        </MenuButton>
+        <Button text="Messages" /><Button fx:id="settingsButton" text="Settings" onAction="#switchToSettings"/>
+        <Button text="Logout" onAction="#handleLogout" />
     </HBox>
 
 </VBox>

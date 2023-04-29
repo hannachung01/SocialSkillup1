@@ -39,5 +39,5 @@
     <Button fx:id="settingsButton" onAction="#showSettings" text="Settings" />
 
     <Button fx:id="groupChatButton" onAction="#showGroupChat" text="Group Chat" />
-
+    <Button fx:id="Back" onAction="#handleBack" text="Go back" />
 </VBox>
