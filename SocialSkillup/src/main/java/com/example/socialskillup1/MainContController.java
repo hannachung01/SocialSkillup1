@@ -115,7 +115,17 @@ public class MainContController {
             items.add(participanti);
         }
     }
-
+    @FXML
+    public void laMesajView(ActionEvent e) throws IOException, SQLException {
+        FXMLLoader mesajView = new FXMLLoader(Main.class.getResource("mesajview.fxml"));
+        Scene scene = new Scene(mesajView.load());
+        MesajController mc = mesajView.getController();
+        mc.setContCurent(contCurent);
+        mc.updateInfo();
+        Stage stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
     @FXML
     private void addGroupToList() {
         //va trebui sa salvam grupurile
